@@ -8,13 +8,14 @@ import java.sql.DriverManager;
 
 public class DatabaseConnection {
     private Connection connection;
-    private DatabaseProperties databaseProperties;
+
 
     public Connection getConnection() {
         return connection;
     }
 
     public void initConnection() {
+        DatabaseProperties databaseProperties = new DatabaseProperties();
         try {
             Class.forName(databaseProperties.driverString());
             connection = DriverManager.getConnection(databaseProperties.connectionString());
@@ -31,16 +32,6 @@ public class DatabaseConnection {
             e.printStackTrace();
             throw new DatabaseConnectionException();
         }
-    }
-
-    @Inject
-    public void setDatabaseProperties(DatabaseProperties databaseProperties) {
-        this.databaseProperties = databaseProperties;
-    }
-
-    // Puur voor test doeleinden.
-    public DatabaseProperties getDatabaseProperties() {
-        return databaseProperties;
     }
 
 }

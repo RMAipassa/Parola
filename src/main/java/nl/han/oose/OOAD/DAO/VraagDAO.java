@@ -1,6 +1,8 @@
 package nl.han.oose.OOAD.DAO;
 
+import jakarta.inject.Inject;
 import nl.han.oose.OOAD.DTO.VraagDTO;
+import nl.han.oose.OOAD.databaseConnection.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,15 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VraagDAO {
-    private Connection connection;
-
-    public VraagDAO(Connection connection) {
-        this.connection = connection;
+    private DatabaseConnection databaseConnection;
+    @Inject
+    public void setDatabaseConnection(DatabaseConnection databaseConnection) {
+        this.databaseConnection = databaseConnection;
     }
 
     public List<VraagDTO> getVragen() {
+        databaseConnection.initConnection();
         List<VraagDTO> vragen = new ArrayList<>();
-        try {
+        try(Connection connection = databaseConnection.getConnection()){
             String vraagQuery = "SELECT id, question_text, is_multiple_choice, quiz_id FROM vraag";
             PreparedStatement vraagStatement = connection.prepareStatement(vraagQuery);
             ResultSet vraagResult = vraagStatement.executeQuery();
@@ -42,8 +45,9 @@ public class VraagDAO {
     }
 
     public List<VraagDTO> getVragenByQuizId(int quizId) {
+        databaseConnection.initConnection();
         List<VraagDTO> vragen = new ArrayList<>();
-        try {
+        try(Connection connection = databaseConnection.getConnection()){
             String vraagQuery = "SELECT id, question_text, is_multiple_choice, quiz_id FROM vraag WHERE quiz_id = ?";
             PreparedStatement vraagStatement = connection.prepareStatement(vraagQuery);
             vraagStatement.setInt(1, quizId);

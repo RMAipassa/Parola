@@ -1,8 +1,8 @@
-DROP DATABASE IF EXISTS Parola;
-CREATE DATABASE Parola;
+DROP DATABASE IF EXISTS parola;
+CREATE DATABASE parola;
 
 
-USE Parola;
+USE parola;
 
 CREATE TABLE users (
                        id INT AUTO_INCREMENT PRIMARY KEY,

@@ -4,9 +4,10 @@ import java.util.Scanner;
 
 public class ParolaMain {
     public static void main(String[] args) {
+        Initializer initializer = new Initializer();
         Scanner scanner = new Scanner(System.in);
         ParolaController controller = ParolaController.getInstance();
-
+        initializer.run(controller);
 
         String username = null;
         String password;
