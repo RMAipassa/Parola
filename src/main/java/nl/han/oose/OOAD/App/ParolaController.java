@@ -1,6 +1,4 @@
-package nl.han.oose.OOAD.Managers;
-
-import java.security.PrivateKey;
+package nl.han.oose.OOAD.App;
 
 public class ParolaController {
     private static ParolaController controller;
