@@ -1,39 +1,164 @@
 package nl.han.oose.OOAD.App;
 
+import nl.han.oose.OOAD.DAO.QuizDAO;
+import nl.han.oose.OOAD.DAO.UserDAO;
+import nl.han.oose.OOAD.DAO.VraagDAO;
+import nl.han.oose.OOAD.DTO.QuizDTO;
+import nl.han.oose.OOAD.DTO.VraagDTO;
+import nl.han.oose.OOAD.Entity.Quiz;
+import nl.han.oose.OOAD.Entity.User;
+import nl.han.oose.OOAD.Entity.Vraag;
 import nl.han.oose.OOAD.Managers.GameManager;
+import nl.han.oose.OOAD.Managers.GameManager;
+import nl.han.oose.OOAD.databaseConnection.DatabaseConnection;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ParolaController {
-    private static ParolaController controller;
+    private static ParolaController instance;
+    private DatabaseConnection databaseConnection;
+    private QuizDAO quizDAO;
+    private VraagDAO vraagDAO;
+    private UserDAO userDAO;
+    private Map<String, User> users = new HashMap<>();
+    private Map<String, GameManager> GameMangerMap = new HashMap<>();
 
-    private GameManager gameManager;
+    private ParolaController() {
+        databaseConnection = new DatabaseConnection();
+        quizDAO = new QuizDAO(databaseConnection.getConnection());
+        vraagDAO = new VraagDAO(databaseConnection.getConnection());
+        userDAO = new UserDAO(databaseConnection.getConnection());
+    }
+
     public static ParolaController getInstance() {
-        if(controller == null){
-            controller = new ParolaController();
+        if (instance == null) {
+            instance = new ParolaController();
         }
-        return controller;
+        return instance;
     }
 
-    public void startQuiz(String playername) {
+    public boolean authenticateUser(String username, String password) {
+        return userDAO.authenticateUser(username, password);
     }
 
-    public boolean nextQuestion(String playername) {
+    public boolean createUser(String username, String password) {
+        if (userDAO.createUser(username, password)) {
+            // Create a User object and add it to the users map
+            User newUser = new User(username, password);
+            users.put(username, newUser);
+            return true;
+        }
         return false;
     }
 
-    public void processAnswer(String playername, String answer) {
+    public void startQuiz(String playerName) {
+        // Retrieve a quiz to start
+        QuizDTO quiz = getQuiz(playerName);
+        if (quiz == null) {
+            System.out.println("No available quizzes or all quizzes have been played.");
+            return;
+        }
+
+        // Retrieve questions for the selected quiz
+        List<VraagDTO> questions = getVragenByQuizId(quiz.getId());
+        if (questions.isEmpty()) {
+            System.out.println("No questions found for the selected quiz.");
+            return;
+        }
+
+        // Create a GameManager object to store quiz-related data
+        GameManager gameManager = new GameManager(questions);
+        GameMangerMap.put(playerName, gameManager);
+        System.out.println("Quiz started. Good luck!");
     }
 
-    public boolean quizFinished(String playername) {
-        return false;
+    public String nextVraag(String playerName) {
+        GameManager gameManager = GameMangerMap.get(playerName);
+        if (gameManager != null) {
+            Vraag vraag = gameManager.getNextVraag();
+            if (vraag != null) {
+                return vraag.getVraagText();
+            }
+        }
+        return "No more questions or quiz not started.";
     }
 
-    public String getLettersForRightAnswers(String playername) {
+    public void processAnswer(String playerName, String answer) {
+        GameManager gameManager = GameMangerMap.get(playerName);
+        if (gameManager != null) {
+            Vraag vraag = gameManager.getCurrentVraag();
+            if (vraag != null) {
+                // Check the answer and update quiz data accordingly
+                boolean isCorrect = checkAnswer(vraag, answer);
+                if (isCorrect) {
+                    gameManager.addCorrectAnswer();
+                    System.out.println("Correct!");
+                } else {
+                    System.out.println("Incorrect.");
+                }
+            }
+        }
+    }
+
+    public boolean quizFinished(String playerName) {
+        GameManager gameManager = GameMangerMap.get(playerName);
+        return gameManager == null || gameManager.isQuizFinished();
+    }
+
+    private QuizDTO getQuiz(String playerName) {
+        // Implement logic to get an available quiz
+        // You can check if the player has already played a quiz or select a random quiz
+        // Return a QuizDTO if available, or null if none are available
         return null;
     }
 
-    public int calculateScore(String playername, String word) {
+    private boolean checkAnswer(Vraag vraag, String answer) {
+        // Implement answer checking logic, depending on whether it's a multiple-choice or open question
+        // Return true if the answer is correct, false otherwise
+        return false;
+    }
+    
+    public int getUserCredits(String username) {
+        User user = users.get(username);
+        if (user != null) {
+            return user.getCredits();
+        }
         return 0;
     }
 
+    public void deductCredits(String username, int amount) {
+        User user = users.get(username);
+        if (user != null) {
+            int currentCredits = user.getCredits();
+            if (currentCredits >= amount) {
+                user.deductCredits(40);
+            }
+        }
+    }
 
+    public List<QuizDTO> getQuizzes() {
+        return quizDAO.getQuizzes();
+    }
+
+    public List<VraagDTO> getVragen() {
+        return vraagDAO.getVragen();
+    }
+
+    public List<VraagDTO> getVragenByQuizId(int quizId) {
+        return vraagDAO.getVragenByQuizId(quizId);
+    }
+
+    public String getLettersForRightAnswers(String playerName) {
+        // Implement logic to get letters for right answers
+        return "ABCDE";
+    }
+
+    public int calculateScore(String playerName, String word) {
+        // Implement score calculation logic
+        return 0;
+    }
 }

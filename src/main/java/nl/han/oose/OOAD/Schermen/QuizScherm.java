@@ -10,18 +10,18 @@ public class QuizScherm {
         return null;
     }
 
-    public void addvragen()
-
-        while(!wilstoppen){
-            this.wilstoppen = getWilStoppen();
-            int vraagnr = getVraagNummer();
-//          quiz.addvraag(vraagnr)
-    }
+//    public void addvragen();
+//
+//        while(!wilstoppen){
+//            this.wilstoppen = getWilStoppen();
+//            int vraagnr = getVraagNummer();
+////          quiz.addvraag(vraagnr)
+//    }
 
     private int getVraagNummer() {
             return 0;
     }
 
-    private boolean getWilStoppen() {
-    }
+//    private boolean getWilStoppen() {
+//    }
 }

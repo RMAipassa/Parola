@@ -1,18 +1,16 @@
-package nl.han.oose.OOAD.Entity;
+package nl.han.oose.OOAD.DTO;
 
-import java.util.ArrayList;
-import java.util.List;
-public class Vraag {
+public class VraagDTO {
     private int id;
     private String vraagText;
     private boolean isMultipleChoice;
-    // Add any other properties you need
+    private int quizId;
 
-    public Vraag(int id, String vraagText, boolean isMultipleChoice) {
+    public VraagDTO(int id, String vraagText, boolean isMultipleChoice, int quizId) {
         this.id = id;
         this.vraagText = vraagText;
         this.isMultipleChoice = isMultipleChoice;
-        // Initialize other properties as needed
+        this.quizId = quizId;
     }
 
     public int getId() {
@@ -26,4 +24,9 @@ public class Vraag {
     public boolean isMultipleChoice() {
         return isMultipleChoice;
     }
+
+    public int getQuizId() {
+        return quizId;
+    }
 }
+
