@@ -1,19 +1,8 @@
-package nl.han.oose.OOAD.App;
+package nl.han.oose.OOAD.Managers;
 
-import nl.han.oose.OOAD.Managers.GameManager;
-
-public class ParolaController {
-    private static ParolaController controller;
-
-    private GameManager gameManager;
-    public static ParolaController getInstance() {
-        if(controller == null){
-            controller = new ParolaController();
-        }
-        return controller;
-    }
-
+public class GameManager {
     public void startQuiz(String playername) {
+
     }
 
     public boolean nextQuestion(String playername) {
@@ -34,6 +23,4 @@ public class ParolaController {
     public int calculateScore(String playername, String word) {
         return 0;
     }
-
-
 }
