@@ -10,6 +10,7 @@ import nl.han.oose.OOAD.DiyInject;
 import nl.han.oose.OOAD.Entity.User;
 import nl.han.oose.OOAD.Entity.Vraag;
 import nl.han.oose.OOAD.Managers.GameManager;
+import nl.han.oose.OOAD.Managers.QuizManager;
 import nl.han.oose.OOAD.databaseConnection.DatabaseConnection;
 
 import javax.xml.crypto.Data;
@@ -20,7 +21,8 @@ import java.util.Map;
 public class ParolaController {
     private static ParolaController instance;
 
-    private QuizDAO quizDAO;
+    private QuizManager quizManager;
+//    private QuizDAO quizDAO;
     private VraagDAO vraagDAO;
     private UserDAO userDAO;
     private Map<String, User> users = new HashMap<>();
@@ -54,7 +56,7 @@ public class ParolaController {
 
     public void startQuiz(String playerName) {
         // Retrieve a quiz to start
-        QuizDTO quiz = getQuiz(playerName);
+        QuizDTO quiz = quizManager.getQuiz(playerName);
         if (quiz == null) {
             System.out.println("No available quizzes or all quizzes have been played.");
             return;
@@ -106,13 +108,6 @@ public class ParolaController {
         return gameManager == null || gameManager.isQuizFinished();
     }
 
-    private QuizDTO getQuiz(String playerName) {
-        // Implement logic to get an available quiz
-        // You can check if the player has already played a quiz or select a random quiz
-        // Return a QuizDTO if available, or null if none are available
-        return null;
-    }
-
     private boolean checkAnswer(Vraag vraag, String answer) {
         // Implement answer checking logic, depending on whether it's a multiple-choice or open question
         // Return true if the answer is correct, false otherwise
@@ -138,9 +133,7 @@ public class ParolaController {
     }
 
     public List<QuizDTO> getQuizzes() {
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        quizDAO.setDatabaseConnection(databaseConnection);
-        return quizDAO.getQuizzes();
+        return quizManager.getQuizzes();
     }
 
     public List<VraagDTO> getVragen() {
@@ -165,9 +158,13 @@ public class ParolaController {
         return 0;
     }
     @DiyInject
-    public void setQuizDAO(QuizDAO quizDAO){
-        this.quizDAO = quizDAO;
+    public void setQuizManager(QuizManager quizManager){
+        this.quizManager = quizManager;
     }
+//    @DiyInject
+//    public void setQuizDAO(QuizDAO quizDAO){
+//        this.quizDAO = quizDAO;
+//    }
     @DiyInject
     public void setVraagDAO(VraagDAO vraagDAO){
         this.vraagDAO = vraagDAO;
