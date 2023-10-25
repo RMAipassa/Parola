@@ -44,5 +44,23 @@ public class QuizDAO {
         }
         return quizzes;
     }
+
+    public boolean hasUserPlayedQuiz(String playerName, int quizId) {
+        databaseConnection.initConnection();
+        Connection connection = databaseConnection.getConnection();
+        String query = "SELECT Heeft_gespeeld FROM User_Played WHERE user_id = (SELECT id FROM users WHERE username = ?) AND Quiz_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, playerName);
+            statement.setInt(2, quizId);
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                return result.getBoolean("Heeft_gespeeld");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
 

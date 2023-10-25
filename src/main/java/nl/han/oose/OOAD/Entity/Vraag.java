@@ -6,13 +6,14 @@ public class Vraag {
     private int id;
     private String vraagText;
     private boolean isMultipleChoice;
-    // Add any other properties you need
+
+    private List<Antwoord> antwoorden;
 
     public Vraag(int id, String vraagText, boolean isMultipleChoice) {
         this.id = id;
         this.vraagText = vraagText;
         this.isMultipleChoice = isMultipleChoice;
-        // Initialize other properties as needed
+        this.antwoorden = new ArrayList<>();
     }
 
     public int getId() {
@@ -26,4 +27,14 @@ public class Vraag {
     public boolean isMultipleChoice() {
         return isMultipleChoice;
     }
+
+    public void addAntwoord(String antwoordText, boolean isCorrect) {
+        Antwoord antwoord = new Antwoord(antwoordText, isCorrect);
+        antwoorden.add(antwoord);
+    }
+
+    public List<Antwoord> getAntwoorden() {
+        return antwoorden;
+    }
 }
+

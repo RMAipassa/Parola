@@ -6,13 +6,13 @@ import nl.han.oose.OOAD.DAO.VraagDAO;
 
 public class Initializer {
 
-    public void run(ParolaController parolaController) {
+    public void run(ParolaControllerOwn parolaControllerOwn) {
         QuizDAO quizDAO = new QuizDAO();
         VraagDAO vraagDAO = new VraagDAO();
         UserDAO userDAO = new UserDAO();
-        parolaController.setQuizDAO(quizDAO);
-        parolaController.setUserDAO(userDAO);
-        parolaController.setVraagDAO(vraagDAO);
+        parolaControllerOwn.setQuizDAO(quizDAO);
+        parolaControllerOwn.setUserDAO(userDAO);
+        parolaControllerOwn.setVraagDAO(vraagDAO);
 
     }
 
