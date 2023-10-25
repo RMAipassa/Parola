@@ -1,11 +1,7 @@
 package nl.han.oose.OOAD.App;
 
-import jakarta.inject.Inject;
-import nl.han.oose.OOAD.DAO.QuizDAO;
-import nl.han.oose.OOAD.DAO.UserDAO;
 import nl.han.oose.OOAD.DAO.VraagDAO;
 import nl.han.oose.OOAD.DTO.QuizDTO;
-import nl.han.oose.OOAD.DTO.UserDTO;
 import nl.han.oose.OOAD.DTO.VraagDTO;
 import nl.han.oose.OOAD.DiyInject;
 import nl.han.oose.OOAD.Entity.User;
@@ -13,9 +9,9 @@ import nl.han.oose.OOAD.Entity.Vraag;
 import nl.han.oose.OOAD.Managers.GameManager;
 import nl.han.oose.OOAD.Managers.QuizManager;
 import nl.han.oose.OOAD.Managers.RegistrationManager;
+import nl.han.oose.OOAD.Managers.VraagManager;
 import nl.han.oose.OOAD.databaseConnection.DatabaseConnection;
 
-import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +21,9 @@ public class ParolaController {
 
     private QuizManager quizManager;
     private RegistrationManager registrationManager;
+    private VraagManager vraagManager;
 //    private QuizDAO quizDAO;
-    private VraagDAO vraagDAO;
+//    private VraagDAO vraagDAO;
 //    private UserDAO userDAO;
     private Map<String, User> users = new HashMap<>();
     private Map<String, GameManager> GameMangerMap = new HashMap<>();
@@ -136,15 +133,11 @@ public class ParolaController {
     }
 
     public List<VraagDTO> getVragen() {
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        vraagDAO.setDatabaseConnection(databaseConnection);
-        return vraagDAO.getVragen();
+        return vraagManager.getVragen();
     }
 
     public List<VraagDTO> getVragenByQuizId(int quizId) {
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        vraagDAO.setDatabaseConnection(databaseConnection);
-        return vraagDAO.getVragenByQuizId(quizId);
+        return vraagManager.getVragenByQuizId(quizId);
     }
 
     public String getLettersForRightAnswers(String playerName) {
@@ -164,14 +157,18 @@ public class ParolaController {
     public void setRegistrationManager(RegistrationManager registrationManager){
         this.registrationManager = registrationManager;
     }
+    @DiyInject
+    public void setVraagManager(VraagManager vraagManager){
+        this.vraagManager = vraagManager;
+    }
 //    @DiyInject
 //    public void setQuizDAO(QuizDAO quizDAO){
 //        this.quizDAO = quizDAO;
 //    }
-    @DiyInject
-    public void setVraagDAO(VraagDAO vraagDAO){
-        this.vraagDAO = vraagDAO;
-    }
+//    @DiyInject
+//    public void setVraagDAO(VraagDAO vraagDAO){
+//        this.vraagDAO = vraagDAO;
+//    }
 //    @DiyInject
 //    public void setUserDAO(UserDAO userDAO){
 //        this.userDAO = userDAO;
