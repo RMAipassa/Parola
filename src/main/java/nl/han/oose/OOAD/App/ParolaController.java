@@ -5,12 +5,14 @@ import nl.han.oose.OOAD.DAO.QuizDAO;
 import nl.han.oose.OOAD.DAO.UserDAO;
 import nl.han.oose.OOAD.DAO.VraagDAO;
 import nl.han.oose.OOAD.DTO.QuizDTO;
+import nl.han.oose.OOAD.DTO.UserDTO;
 import nl.han.oose.OOAD.DTO.VraagDTO;
 import nl.han.oose.OOAD.DiyInject;
 import nl.han.oose.OOAD.Entity.User;
 import nl.han.oose.OOAD.Entity.Vraag;
 import nl.han.oose.OOAD.Managers.GameManager;
 import nl.han.oose.OOAD.Managers.QuizManager;
+import nl.han.oose.OOAD.Managers.RegistrationManager;
 import nl.han.oose.OOAD.databaseConnection.DatabaseConnection;
 
 import javax.xml.crypto.Data;
@@ -22,9 +24,10 @@ public class ParolaController {
     private static ParolaController instance;
 
     private QuizManager quizManager;
+    private RegistrationManager registrationManager;
 //    private QuizDAO quizDAO;
     private VraagDAO vraagDAO;
-    private UserDAO userDAO;
+//    private UserDAO userDAO;
     private Map<String, User> users = new HashMap<>();
     private Map<String, GameManager> GameMangerMap = new HashMap<>();
 
@@ -37,17 +40,13 @@ public class ParolaController {
     }
 
     public boolean authenticateUser(String username, String password) {
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        userDAO.setDatabaseConnection(databaseConnection);
-        return userDAO.authenticateUser(username, password);
+        return registrationManager.authenticateUser(username, password);
     }
 
     public boolean createUser(String username, String password) {
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        userDAO.setDatabaseConnection(databaseConnection);
-        if (userDAO.createUser(username, password)) {
-            // Create a User object and add it to the users map
-            User newUser = new User(username, password);
+        User newUser = registrationManager.createUser(username, password);
+        if (newUser != null) {
+            // Add created User object to the users map
             users.put(username, newUser);
             return true;
         }
@@ -161,6 +160,10 @@ public class ParolaController {
     public void setQuizManager(QuizManager quizManager){
         this.quizManager = quizManager;
     }
+    @DiyInject
+    public void setRegistrationManager(RegistrationManager registrationManager){
+        this.registrationManager = registrationManager;
+    }
 //    @DiyInject
 //    public void setQuizDAO(QuizDAO quizDAO){
 //        this.quizDAO = quizDAO;
@@ -169,8 +172,8 @@ public class ParolaController {
     public void setVraagDAO(VraagDAO vraagDAO){
         this.vraagDAO = vraagDAO;
     }
-    @DiyInject
-    public void setUserDAO(UserDAO userDAO){
-        this.userDAO = userDAO;
-    }
+//    @DiyInject
+//    public void setUserDAO(UserDAO userDAO){
+//        this.userDAO = userDAO;
+//    }
 }

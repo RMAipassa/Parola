@@ -44,5 +44,32 @@ public class QuizDAO {
         }
         return quizzes;
     }
+
+    public QuizDTO getQuiz(int quizId) {
+        databaseConnection.initConnection();
+        QuizDTO quizDTO = null;
+        try (Connection connection = databaseConnection.getConnection()) {
+            String quizQuery = "SELECT id, name, theme FROM quiz WHERE id = ?";
+            PreparedStatement quizStatement = connection.prepareStatement(quizQuery);
+
+            quizStatement.setInt(1, quizId);
+
+            ResultSet quizResult = quizStatement.executeQuery();
+
+            if (quizResult.next()) {
+                int id = quizResult.getInt("id");
+                String name = quizResult.getString("name");
+                String theme = quizResult.getString("theme");
+
+                quizDTO = new QuizDTO(id, name, theme);
+            }
+
+            quizResult.close();
+            quizStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return quizDTO;
+    }
 }
 
