@@ -1,18 +1,25 @@
 package nl.han.oose.OOAD.Entity;
 
 public class QuizResult {
+	private int correctAnswerCount;
+	private int wordLength;
+	private int totalTime;
+
+	public QuizResult(int correctAnswerCount, int wordLength, int totalTime) {
+		this.correctAnswerCount = correctAnswerCount;
+		this.wordLength = wordLength;
+		this.totalTime = totalTime;
+	}
+
 	public int getCorrectAnswerCount() {
-		// Implement correct answer count
-		return 0;
+		return correctAnswerCount;
 	}
 
 	public int getWordLength() {
-		// Implement word length
-		return 0;
+		return wordLength;
 	}
 
 	public int getTotalTime() {
-		// Implement total time
-		return 0;
+		return totalTime;
 	}
 }
