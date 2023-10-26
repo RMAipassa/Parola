@@ -7,30 +7,26 @@ import nl.han.oose.OOAD.Schermen.RegistratieScherm;
 import nl.han.oose.OOAD.databaseConnection.DatabaseConnection;
 
 public class RegistrationManager {
-    private UserDAO userDAO;
+    private UserDAO userDAO = new UserDAO();
     private RegistratieScherm registratieScherm;
 
-    @DiyInject
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
 
     public void toonformulier(){
         registratieScherm.toonFormulier();
     }
 
-    public boolean authenticateUser(String username, String password) {
+    public boolean authenticateUser(String username) {
         DatabaseConnection databaseConnection = new DatabaseConnection();
         userDAO.setDatabaseConnection(databaseConnection);
-        return userDAO.authenticateUser(username, password);
+        return userDAO.authenticateUser(username);
     }
 
-    public User createUser(String username, String password) {
+    public User createUser(String username) {
         DatabaseConnection databaseConnection = new DatabaseConnection();
         userDAO.setDatabaseConnection(databaseConnection);
-        if (userDAO.createUser(username, password)) {
+        if (userDAO.createUser(username)) {
             // Create a User object
-            return new User(username, password);
+            return new User(username);
         }
         return null;
     }

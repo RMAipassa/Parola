@@ -1,0 +1,12 @@
+
+;
+java:S1128"Remove this duplicated import.(¥ËôÖ8ªÎ÷¯¶1
+@
+java:S1128"Remove this duplicated import.(òÄ™ƒÿÿÿÿÿ8«Î÷¯¶1
+:
+java:S1128"Remove this duplicated import.(ˆóÚw8«Î÷¯¶1
+;
+java:S1128"Remove this duplicated import.(ÛïÆŸ8¬Î÷¯¶1
+{	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ˆÉ±Äùÿÿÿÿ8ßéð¯¶1
+q
+java:S2095"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(·Ç‚æøÿÿÿÿ8¯´¤°¶1

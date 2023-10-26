@@ -9,7 +9,7 @@ import nl.han.oose.OOAD.databaseConnection.DatabaseConnection;
 import java.util.List;
 
 public class VraagManager {
-    private VraagDAO vraagDAO;
+    private VraagDAO vraagDAO = new VraagDAO();
     private VraagScherm vraagScherm;
 
     @DiyInject

@@ -19,14 +19,16 @@ import java.util.Map;
 public class ParolaController {
     private static ParolaController instance;
 
-    private QuizManager quizManager;
-    private RegistrationManager registrationManager;
-    private VraagManager vraagManager;
+    private QuizManager quizManager = new QuizManager();
+    private RegistrationManager registrationManager = new RegistrationManager();
+    private VraagManager vraagManager = new VraagManager();
 //    private QuizDAO quizDAO;
 //    private VraagDAO vraagDAO;
 //    private UserDAO userDAO;
     private Map<String, User> users = new HashMap<>();
     private Map<String, GameManager> GameMangerMap = new HashMap<>();
+
+    private boolean FirstquestionPlayed = false;
 
 
     public static ParolaController getInstance() {
@@ -36,12 +38,12 @@ public class ParolaController {
         return instance;
     }
 
-    public boolean authenticateUser(String username, String password) {
-        return registrationManager.authenticateUser(username, password);
+    public boolean authenticateUser(String username) {
+        return registrationManager.authenticateUser(username);
     }
 
-    public boolean createUser(String username, String password) {
-        User newUser = registrationManager.createUser(username, password);
+    public boolean createUser(String username) {
+        User newUser = registrationManager.createUser(username);
         if (newUser != null) {
             // Add created User object to the users map
             users.put(username, newUser);
@@ -51,7 +53,10 @@ public class ParolaController {
     }
 
     public void startQuiz(String playerName) {
-        // Retrieve a quiz to start
+        if(!authenticateUser(playerName)){
+            System.out.println("User doesnt exist, creating user ..... ..... .....");
+            createUser(playerName);
+        }
         QuizDTO quiz = quizManager.getQuiz(playerName);
         if (quiz == null) {
             System.out.println("No available quizzes or all quizzes have been played.");
@@ -71,9 +76,14 @@ public class ParolaController {
         System.out.println("Quiz started. Good luck!");
     }
 
-    public String nextVraag(String playerName) {
+    public String nextQuestion(String playerName) {
         GameManager gameManager = GameMangerMap.get(playerName);
         if (gameManager != null) {
+            if(!FirstquestionPlayed){
+                this.FirstquestionPlayed = true;
+                return gameManager.getCurrentVraag().getVraagText();
+
+            }
             Vraag vraag = gameManager.getNextVraag();
             if (vraag != null) {
                 return vraag.getVraagText();

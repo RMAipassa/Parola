@@ -1,0 +1,21 @@
+
+]
+java:S2094
+"BRemove this empty class, write its code or make it an "interface".(âã½°þÿÿÿÿ
+V	java:S125"<This block of commented-out lines of code should be removed.(Õéüžþÿÿÿÿ
+Q	java:S125"<This block of commented-out lines of code should be removed.(­í°‘
+Q	java:S125 "<This block of commented-out lines of code should be removed.(Ž´ºÛ
+V	java:S125/"<This block of commented-out lines of code should be removed.(éØ»Úûÿÿÿÿ
+T
+java:S1128"9Remove this unused import 'nl.han.oose.OOAD.DAO.QuizDAO'.(óÍýÿÿÿÿ
+T
+java:S1128"9Remove this unused import 'nl.han.oose.OOAD.DAO.UserDAO'.(¥ŒŠûÿÿÿÿ
+U
+java:S1128":Remove this unused import 'nl.han.oose.OOAD.DAO.VraagDAO'.(Ô‹ìùøÿÿÿÿ
+]
+java:S1128"BRemove this unused import 'nl.han.oose.OOAD.Managers.QuizManager'.(©¹ÇÅûÿÿÿÿ
+`
+java:S1128"JRemove this unused import 'nl.han.oose.OOAD.Managers.RegistrationManager'.(ó¼ÅÇ
+Y
+java:S1128"CRemove this unused import 'nl.han.oose.OOAD.Managers.VraagManager'.(ßü‘
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(‰Úè

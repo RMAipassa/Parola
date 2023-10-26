@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 
 public class ParolaMain {
-    public void main(){
+    public static void main(String[] args) {
     Scanner scanner = new Scanner(System.in);
     ParolaController parola = ParolaController.getInstance();
 

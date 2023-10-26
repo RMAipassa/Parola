@@ -1,0 +1,28 @@
+
+r	java:S116"XRename this field "GameMangerMap" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ëıîøÿÿÿÿ
+r	java:S116"^Rename this field "FirstquestionPlayed" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(±òó>
+V	java:S125"<This block of commented-out lines of code should be removed.(ãˆìšÿÿÿÿÿ
+N	java:S1069"9Replace this use of System.out or System.err by a logger.(ÇÃş
+S	java:S106>"9Replace this use of System.out or System.err by a logger.(ıÃíèÿÿÿÿÿ
+N	java:S106E"9Replace this use of System.out or System.err by a logger.(ï¯€
+N	java:S106L"9Replace this use of System.out or System.err by a logger.(ˆ–¶İ
+N	java:S106h"9Replace this use of System.out or System.err by a logger.(²˜ÅÖ
+S	java:S106j"9Replace this use of System.out or System.err by a logger.(âíÄÎûÿÿÿÿ
+S
+java:S1172u"8Remove these unused method parameters "vraag", "answer".(˜²¬½øÿÿÿÿ
+U
+java:S3400›"9Remove this method and declare a constant for this value.(Ô†íÅıÿÿÿÿ
+M
+java:S1172™"1Remove this unused method parameter "playerName".(Û…Ïåıÿÿÿÿ
+P
+java:S3400 "9Remove this method and declare a constant for this value.(”·³›
+R
+java:S1172";Remove these unused method parameters "playerName", "word".(®ô­Ü
+R	java:S125¯"<This block of commented-out lines of code should be removed.(‹İ‰ƒ
+\
+java:S1128":Remove this unused import 'nl.han.oose.OOAD.DAO.VraagDAO'.(Ô‹ìùøÿÿÿÿ8¢ŒÅ²¶1
+p
+java:S1128"SRemove this unused import 'nl.han.oose.OOAD.databaseConnection.DatabaseConnection'.(›õÅ§8¢ŒÅ²¶1
+o	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(‰Úè
+Y
+java:S2583f"DChange this condition so that it does not always evaluate to "false"(¤æ˜?

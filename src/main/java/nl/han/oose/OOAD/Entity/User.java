@@ -5,7 +5,7 @@ public class User {
     private String password;
     private int credits;
 
-    public User(String username, String password) {
+    public User(String username) {
         this.username = username;
         this.password = password;
         this.credits = 1000; // New users start with 1000 credits
