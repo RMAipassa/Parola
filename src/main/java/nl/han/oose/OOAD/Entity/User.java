@@ -28,4 +28,8 @@ public class User {
             credits -= amount;
         }
     }
+
+    public void addCredits(int boughtCredits) {
+        this.credits += boughtCredits;
+    }
 }

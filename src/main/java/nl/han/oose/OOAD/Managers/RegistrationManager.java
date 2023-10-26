@@ -25,7 +25,6 @@ public class RegistrationManager {
         DatabaseConnection databaseConnection = new DatabaseConnection();
         userDAO.setDatabaseConnection(databaseConnection);
         if (userDAO.createUser(username)) {
-            // Create a User object
             return new User(username);
         }
         return null;

@@ -9,10 +9,10 @@ public class ParolaMain {
     ParolaController parola = ParolaController.getInstance();
 
         System.out.println("Enter your player name: ");
-    String playername = scanner.nextLine();
+        String playername = scanner.nextLine();
 
-        System.out.println("The 8-question quiz starts. Good luck!");
         parola.startQuiz(playername);
+        System.out.println("The 8-question quiz starts. Good luck!");
         do {
         System.out.println(parola.nextQuestion(playername));
         System.out.print("Give your answer to this question: ");

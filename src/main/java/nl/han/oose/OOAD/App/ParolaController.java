@@ -1,20 +1,28 @@
 package nl.han.oose.OOAD.App;
 
+import nl.han.oose.OOAD.DAO.UserDAO;
 import nl.han.oose.OOAD.DAO.VraagDAO;
 import nl.han.oose.OOAD.DTO.QuizDTO;
+import nl.han.oose.OOAD.DTO.UserDTO;
 import nl.han.oose.OOAD.DTO.VraagDTO;
 import nl.han.oose.OOAD.DiyInject;
+import nl.han.oose.OOAD.Entity.Antwoord;
+import nl.han.oose.OOAD.Entity.QuizResult;
 import nl.han.oose.OOAD.Entity.User;
 import nl.han.oose.OOAD.Entity.Vraag;
-import nl.han.oose.OOAD.Managers.GameManager;
-import nl.han.oose.OOAD.Managers.QuizManager;
-import nl.han.oose.OOAD.Managers.RegistrationManager;
-import nl.han.oose.OOAD.Managers.VraagManager;
+import nl.han.oose.OOAD.Managers.*;
+import nl.han.oose.OOAD.Strategies.CorrectAnswersCalculationStrategy;
+import nl.han.oose.OOAD.Strategies.ScoreCalculationStrategy;
+import nl.han.oose.OOAD.Strategies.TotalTimeCalculationStrategy;
+import nl.han.oose.OOAD.Strategies.WordLengthCalculationStrategy;
 import nl.han.oose.OOAD.databaseConnection.DatabaseConnection;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class ParolaController {
     private static ParolaController instance;
@@ -22,9 +30,9 @@ public class ParolaController {
     private QuizManager quizManager = new QuizManager();
     private RegistrationManager registrationManager = new RegistrationManager();
     private VraagManager vraagManager = new VraagManager();
-//    private QuizDAO quizDAO;
-//    private VraagDAO vraagDAO;
-//    private UserDAO userDAO;
+
+    private CreditsManager creditsManager = new CreditsManager();
+    private Map<String, Long> quizStartTimeMap = new HashMap<>();
     private Map<String, User> users = new HashMap<>();
     private Map<String, GameManager> GameMangerMap = new HashMap<>();
 
@@ -45,7 +53,6 @@ public class ParolaController {
     public boolean createUser(String username) {
         User newUser = registrationManager.createUser(username);
         if (newUser != null) {
-            // Add created User object to the users map
             users.put(username, newUser);
             return true;
         }
@@ -53,9 +60,18 @@ public class ParolaController {
     }
 
     public void startQuiz(String playerName) {
+        loadUsersFromDatabase();
         if(!authenticateUser(playerName)){
             System.out.println("User doesnt exist, creating user ..... ..... .....");
             createUser(playerName);
+        }
+        if(getUserCredits(playerName) < 40){
+            System.out.println("User doesnt have enough credits, you need to buy more to continue playing");
+            int boughtCredits = creditsManager.buyCredits();
+            User user = users.get(playerName);
+            user.addCredits(boughtCredits);
+
+
         }
         QuizDTO quiz = quizManager.getQuiz(playerName);
         if (quiz == null) {
@@ -63,32 +79,49 @@ public class ParolaController {
             return;
         }
 
-        // Retrieve questions for the selected quiz
+
+        quizStartTimeMap.put(playerName, System.currentTimeMillis() / 1000);
+
+
         List<VraagDTO> questions = getVragenByQuizId(quiz.getId());
         if (questions.isEmpty()) {
             System.out.println("No questions found for the selected quiz.");
             return;
         }
 
-        // Create a GameManager object to store quiz-related data
+        deductCredits(playerName, 40);
         GameManager gameManager = new GameManager(questions);
         GameMangerMap.put(playerName, gameManager);
-        System.out.println("Quiz started. Good luck!");
     }
 
+    public void loadUsersFromDatabase() {
+        UserDAO userDAO = new UserDAO();
+        DatabaseConnection databaseConnection = new DatabaseConnection();
+        userDAO.setDatabaseConnection(databaseConnection);
+        List<UserDTO> usersFromDB = userDAO.getAllUsers();
+        for (UserDTO userDTO : usersFromDB) {
+            User user = new User(userDTO.getUsername());
+            user.addCredits(userDTO.getCredits());
+            users.put(userDTO.getUsername(), user);
+        }
+    }
     public String nextQuestion(String playerName) {
         GameManager gameManager = GameMangerMap.get(playerName);
-        if (gameManager != null) {
-            if(!FirstquestionPlayed){
-                this.FirstquestionPlayed = true;
-                return gameManager.getCurrentVraag().getVraagText();
 
+        if (gameManager != null) {
+            if (!FirstquestionPlayed) {
+                this.FirstquestionPlayed = true;
+                Vraag currentVraag = gameManager.getCurrentVraag();
+                return gameManager.getQuestionTextWithAnswers(currentVraag);
             }
+
             Vraag vraag = gameManager.getNextVraag();
+
             if (vraag != null) {
-                return vraag.getVraagText();
+                return gameManager.getQuestionTextWithAnswers(vraag);
             }
         }
+
         return "No more questions or quiz not started.";
     }
 
@@ -97,7 +130,6 @@ public class ParolaController {
         if (gameManager != null) {
             Vraag vraag = gameManager.getCurrentVraag();
             if (vraag != null) {
-                // Check the answer and update quiz data accordingly
                 boolean isCorrect = checkAnswer(vraag, answer);
                 if (isCorrect) {
                     gameManager.addCorrectAnswer();
@@ -114,9 +146,20 @@ public class ParolaController {
         return gameManager == null || gameManager.isQuizFinished();
     }
 
-    private boolean checkAnswer(Vraag vraag, String answer) {
-        // Implement answer checking logic, depending on whether it's a multiple-choice or open question
-        // Return true if the answer is correct, false otherwise
+    public boolean checkAnswer(Vraag vraag, String answer) {
+        if (vraag.isMultipleChoice()) {
+            int selectedOption = answer.toUpperCase().charAt(0) - 'A';
+            if (selectedOption >= 0 && selectedOption < vraag.getAntwoorden().size()) {
+                return vraag.getAntwoorden().get(selectedOption).isCorrect();
+            }
+        } else {
+            for (Antwoord antwoord : vraag.getAntwoorden()) {
+                if (antwoord.isCorrect() && antwoord.getAntwoordText().equalsIgnoreCase(answer)) {
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
     
@@ -151,36 +194,62 @@ public class ParolaController {
     }
 
     public String getLettersForRightAnswers(String playerName) {
-        // Implement logic to get letters for right answers
-        return "ABCDE";
+        GameManager gameManager = GameMangerMap.get(playerName);
+        return gameManager.getLetters();
     }
 
+
     public int calculateScore(String playerName, String word) {
-        // Implement score calculation logic
-        return 0;
+        GameManager gameManager = GameMangerMap.get(playerName);
+        int correctAnswerCount = gameManager.getCorrectAnswerCount();
+        int wordLength = word.length();
+        int totalTime = getQuizTimeElapsed(playerName);
+
+        QuizResult quizResult = new QuizResult(correctAnswerCount, wordLength, totalTime);
+
+
+        ScoreCalculationStrategy correctAnswersStrategy = new CorrectAnswersCalculationStrategy();
+        ScoreCalculationStrategy totalTimeStrategy = new TotalTimeCalculationStrategy();
+        ScoreCalculationStrategy wordLengthStrategy = new WordLengthCalculationStrategy();
+
+
+        int correctAnswersScore = correctAnswersStrategy.calculateScore(quizResult);
+        int totalTimeScore = totalTimeStrategy.calculateScore(quizResult);
+        int wordLengthScore = wordLengthStrategy.calculateScore(quizResult);
+
+
+        boolean wordExists = checkWordInWordList(word);
+
+        int finalScore = correctAnswersScore + totalTimeScore;
+
+
+        if (wordExists) {
+            finalScore += wordLengthScore;
+        }
+
+        return finalScore;
     }
-    @DiyInject
-    public void setQuizManager(QuizManager quizManager){
-        this.quizManager = quizManager;
+
+    private boolean checkWordInWordList(String word) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/wordlist.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().equalsIgnoreCase(word.trim())) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false; // Word not found in the wordlist.txt file
     }
-    @DiyInject
-    public void setRegistrationManager(RegistrationManager registrationManager){
-        this.registrationManager = registrationManager;
+
+    public int getQuizTimeElapsed(String playerName) {
+        Long startTime = quizStartTimeMap.get(playerName);
+        if (startTime != null) {
+            long currentTime = System.currentTimeMillis() / 1000;
+            return (int)(currentTime - startTime);
+        }
+        return -1;
     }
-    @DiyInject
-    public void setVraagManager(VraagManager vraagManager){
-        this.vraagManager = vraagManager;
-    }
-//    @DiyInject
-//    public void setQuizDAO(QuizDAO quizDAO){
-//        this.quizDAO = quizDAO;
-//    }
-//    @DiyInject
-//    public void setVraagDAO(VraagDAO vraagDAO){
-//        this.vraagDAO = vraagDAO;
-//    }
-//    @DiyInject
-//    public void setUserDAO(UserDAO userDAO){
-//        this.userDAO = userDAO;
-//    }
 }
