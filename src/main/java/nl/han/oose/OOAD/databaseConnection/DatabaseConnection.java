@@ -1,6 +1,5 @@
 package nl.han.oose.OOAD.databaseConnection;
 
-import jakarta.inject.Inject;
 import nl.han.oose.OOAD.Exceptions.DatabaseConnectionException;
 
 import java.sql.Connection;

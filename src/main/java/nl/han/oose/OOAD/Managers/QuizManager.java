@@ -2,7 +2,6 @@ package nl.han.oose.OOAD.Managers;
 
 import nl.han.oose.OOAD.DAO.QuizDAO;
 import nl.han.oose.OOAD.DTO.QuizDTO;
-import nl.han.oose.OOAD.databaseConnection.DatabaseConnection;
 
 import java.util.List;
 import java.util.Random;
