@@ -2,7 +2,6 @@ package nl.han.oose.OOAD.Managers;
 
 import nl.han.oose.OOAD.DAO.VraagDAO;
 import nl.han.oose.OOAD.DTO.VraagDTO;
-import nl.han.oose.OOAD.databaseConnection.DatabaseConnection;
 
 import java.util.List;
 

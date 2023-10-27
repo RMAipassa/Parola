@@ -35,7 +35,7 @@ public class UserDAO {
 
     public boolean authenticateUser(String username) {
         databaseConnection.initConnection();
-        try(Connection connection = databaseConnection.getConnection()){
+        try (Connection connection = databaseConnection.getConnection()) {
             String query = "SELECT username, password FROM users WHERE username = ?";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, username);
@@ -52,7 +52,7 @@ public class UserDAO {
 
     public boolean createUser(String username) {
         databaseConnection.initConnection();
-        try(Connection connection = databaseConnection.getConnection()){
+        try (Connection connection = databaseConnection.getConnection()) {
             String query = "INSERT INTO users (username, password, credits) VALUES (?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, username);

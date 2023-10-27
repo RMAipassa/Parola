@@ -5,7 +5,6 @@ import nl.han.oose.OOAD.DTO.AntwoordDTO;
 import nl.han.oose.OOAD.DTO.VraagDTO;
 import nl.han.oose.OOAD.Entity.Antwoord;
 import nl.han.oose.OOAD.Entity.Vraag;
-import nl.han.oose.OOAD.databaseConnection.DatabaseConnection;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -68,12 +67,13 @@ public class GameManager {
             String answers = String.join("\n", answerOptions);
             questionTextWithAnswers.append("\n").append(answers);
         }
-        if(isLastQuestion(vraag)){
+        if (isLastQuestion(vraag)) {
             this.isLastQuestionAnswered = true;
         }
 
         return questionTextWithAnswers.toString();
     }
+
     public boolean checkAnswer(Vraag vraag, String answer) {
         if (vraag.isMultipleChoice()) {
             int selectedOption = answer.toUpperCase().charAt(0) - 'A';
@@ -101,7 +101,6 @@ public class GameManager {
         char randomLetter = generateRandomLetter();
         randomLetters += randomLetter;
     }
-
 
 
     public int getCorrectAnswerCount() {

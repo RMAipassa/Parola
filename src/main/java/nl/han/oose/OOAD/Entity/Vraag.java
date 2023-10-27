@@ -2,6 +2,7 @@ package nl.han.oose.OOAD.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public class Vraag {
     private int id;
     private String vraagText;

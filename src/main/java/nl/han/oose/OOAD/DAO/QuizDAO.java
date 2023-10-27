@@ -15,7 +15,6 @@ public class QuizDAO {
     private DatabaseConnection databaseConnection = new DatabaseConnection();
 
 
-
     public List<QuizDTO> getQuizzes() {
         databaseConnection.initConnection();
         List<QuizDTO> quizzes = new ArrayList<>();

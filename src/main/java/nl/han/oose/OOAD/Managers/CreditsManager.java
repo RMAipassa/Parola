@@ -37,7 +37,6 @@ public class CreditsManager {
     }
 
 
-
     private int getCreditAmount(int packageChoice) {
         switch (packageChoice) {
             case 1:

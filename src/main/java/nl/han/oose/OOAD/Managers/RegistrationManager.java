@@ -2,7 +2,6 @@ package nl.han.oose.OOAD.Managers;
 
 import nl.han.oose.OOAD.DAO.UserDAO;
 import nl.han.oose.OOAD.Entity.User;
-import nl.han.oose.OOAD.databaseConnection.DatabaseConnection;
 
 import java.util.Map;
 

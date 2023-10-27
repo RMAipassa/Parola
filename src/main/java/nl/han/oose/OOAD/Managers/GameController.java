@@ -1,5 +1,6 @@
 package nl.han.oose.OOAD.Managers;
 
+import nl.han.oose.OOAD.Adapters.DictionaryAdapter;
 import nl.han.oose.OOAD.DAO.QuizDAO;
 import nl.han.oose.OOAD.DAO.UserDAO;
 import nl.han.oose.OOAD.DTO.QuizDTO;
@@ -12,11 +13,7 @@ import nl.han.oose.OOAD.Strategies.CorrectAnswersCalculationStrategy;
 import nl.han.oose.OOAD.Strategies.ScoreCalculationStrategy;
 import nl.han.oose.OOAD.Strategies.TotalTimeCalculationStrategy;
 import nl.han.oose.OOAD.Strategies.WordLengthCalculationStrategy;
-import nl.han.oose.OOAD.databaseConnection.DatabaseConnection;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +25,7 @@ public class GameController {
     private Map<String, Boolean> lastQuestionPlayedMap = new HashMap<>();
 
     private QuizDTO quiz;
+
     public GameController() {
         gameManagerMap = new HashMap<>();
         quizStartTimeMap = new HashMap<>();
@@ -151,12 +149,10 @@ public class GameController {
         int wordLengthScore = wordLengthStrategy.calculateScore(quizResult);
 
 
-        boolean wordExists = checkWordInWordList(word);
-
         int finalScore = correctAnswersScore + totalTimeScore;
 
-
-        if (wordExists) {
+        DictionaryAdapter adapter = new DictionaryAdapter();
+        if (adapter.validateWord(word)) {
             finalScore += wordLengthScore;
         }
 
@@ -213,19 +209,6 @@ public class GameController {
         return -1;
     }
 
-    private boolean checkWordInWordList(String word) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/wordlist.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.trim().equalsIgnoreCase(word.trim())) {
-                    return true;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false; // Word not found in the wordlist.txt file
-    }
 
     public Map<String, GameManager> getGameManagerMap() {
         return gameManagerMap;
