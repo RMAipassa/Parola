@@ -1,29 +1,25 @@
 package nl.han.oose.OOAD.DAO;
-import jakarta.inject.Inject;
+
 import nl.han.oose.OOAD.DTO.QuizDTO;
-import nl.han.oose.OOAD.DiyInject;
 import nl.han.oose.OOAD.databaseConnection.DatabaseConnection;
 
-import javax.xml.crypto.Data;
-import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class QuizDAO {
-    private DatabaseConnection databaseConnection;
-    @DiyInject
-    public void setDatabaseConnection(DatabaseConnection databaseConnection) {
-        this.databaseConnection = databaseConnection;
-    }
+    private DatabaseConnection databaseConnection = new DatabaseConnection();
+
+
 
     public List<QuizDTO> getQuizzes() {
         databaseConnection.initConnection();
         List<QuizDTO> quizzes = new ArrayList<>();
-        try(Connection connection = databaseConnection.getConnection()){
+        try (Connection connection = databaseConnection.getConnection()) {
             String quizQuery = "SELECT id, name, theme FROM quiz";
             PreparedStatement quizStatement = connection.prepareStatement(quizQuery);
             ResultSet quizResult = quizStatement.executeQuery();
@@ -45,6 +41,22 @@ public class QuizDAO {
         return quizzes;
     }
 
+    public List<QuizDTO> getUnplayedQuizzes(String playerName, List<QuizDTO> allQuizzes) {
+        List<QuizDTO> unplayedQuizzes = new ArrayList<>();
+        for (QuizDTO quiz : allQuizzes) {
+            if (!hasUserPlayedQuiz(playerName, quiz.getId())) {
+                unplayedQuizzes.add(quiz);
+            }
+        }
+        return unplayedQuizzes;
+    }
+
+    public QuizDTO getRandomPlayedQuiz(List<QuizDTO> quizzes) {
+        Random random = new Random();
+        int randomIndex = random.nextInt(quizzes.size());
+        return quizzes.get(randomIndex);
+    }
+
     public boolean hasUserPlayedQuiz(String playerName, int quizId) {
         databaseConnection.initConnection();
         Connection connection = databaseConnection.getConnection();
@@ -62,5 +74,21 @@ public class QuizDAO {
         }
         return false;
     }
-}
 
+    public void markQuizAsPlayed(String playerName, int quizId) {
+        databaseConnection.initConnection();
+        Connection connection = databaseConnection.getConnection();
+
+        String insertQuery = "INSERT INTO User_Played (user_id, Quiz_id, Heeft_gespeeld) " +
+                "VALUES ((SELECT id FROM users WHERE username = ?), ?, 1)";
+
+        try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
+            insertStatement.setString(1, playerName);
+            insertStatement.setInt(2, quizId);
+            insertStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+}

@@ -32,4 +32,8 @@ public class User {
     public void addCredits(int boughtCredits) {
         this.credits += boughtCredits;
     }
+
+    public void setCredits(int credits) {
+        this.credits = credits;
+    }
 }

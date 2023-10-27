@@ -1,7 +1,6 @@
 package nl.han.oose.OOAD.DAO;
 
 import nl.han.oose.OOAD.DTO.AntwoordDTO;
-import nl.han.oose.OOAD.DiyInject;
 import nl.han.oose.OOAD.databaseConnection.DatabaseConnection;
 
 import java.sql.Connection;
@@ -9,19 +8,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AntwoordDAO {
-    private DatabaseConnection databaseConnection;
-    @DiyInject
-    public void setDatabaseConnection(DatabaseConnection databaseConnection) {
-        this.databaseConnection = databaseConnection;
-    }
+    private DatabaseConnection databaseConnection =  new DatabaseConnection();
 
     public List<AntwoordDTO> getAntwoordenByVraagId(int vraagId) {
         databaseConnection.initConnection();

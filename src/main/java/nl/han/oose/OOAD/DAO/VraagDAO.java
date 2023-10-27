@@ -12,11 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VraagDAO {
-    private DatabaseConnection databaseConnection;
-    @Inject
-    public void setDatabaseConnection(DatabaseConnection databaseConnection) {
-        this.databaseConnection = databaseConnection;
-    }
+    private DatabaseConnection databaseConnection = new DatabaseConnection();
 
     public List<VraagDTO> getVragen() {
         databaseConnection.initConnection();

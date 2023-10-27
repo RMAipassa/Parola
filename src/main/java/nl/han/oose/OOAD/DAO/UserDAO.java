@@ -11,11 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO {
-    private DatabaseConnection databaseConnection;
+    private DatabaseConnection databaseConnection = new DatabaseConnection();
 
-    public void setDatabaseConnection(DatabaseConnection databaseConnection) {
-        this.databaseConnection = databaseConnection;
-    }
 
     public List<UserDTO> getAllUsers() {
         databaseConnection.initConnection();
@@ -63,6 +60,25 @@ public class UserDAO {
             statement.setInt(3, 1000);
             statement.executeUpdate();
             return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateUserCredits(String username, int credits) {
+        databaseConnection.initConnection();
+
+        try (Connection connection = databaseConnection.getConnection()) {
+            String query = "UPDATE users SET credits = ? WHERE username = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+
+            statement.setInt(1, credits);
+            statement.setString(2, username);
+
+            int rowsUpdated = statement.executeUpdate();
+
+            return rowsUpdated > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }

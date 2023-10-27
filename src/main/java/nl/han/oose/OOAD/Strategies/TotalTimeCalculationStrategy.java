@@ -5,6 +5,7 @@ import nl.han.oose.OOAD.Entity.QuizResult;
 public class TotalTimeCalculationStrategy implements ScoreCalculationStrategy {
 	@Override
 	public int calculateScore(QuizResult quizResult) {
-		return quizResult.getTotalTime();
+		int score = quizResult.getTotalTime()/60;
+		return score;
 	}
 }

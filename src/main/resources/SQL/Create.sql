@@ -36,13 +36,15 @@ CREATE TABLE antwoord (
                       FOREIGN KEY (vraag_id) REFERENCES vraag (id)
 );
 
-CREATE TABLE user_played(
-    Quiz_id INT,
-    user_id INT PRIMARY KEY,
-    Heeft_gespeeld BOOLEAN NOT NULL,
-    FOREIGN KEY (Quiz_ID) REFERENCES quiz (id),
-    FOREIGN KEY (user_id) REFERENCES  users (id)
+CREATE TABLE User_Played (
+                             UserPlayedID INT AUTO_INCREMENT PRIMARY KEY,
+                             Quiz_id INT,
+                             User_id INT,
+                             Heeft_gespeeld BOOLEAN NOT NULL,
+                             FOREIGN KEY (Quiz_ID) REFERENCES quiz (id),
+                             FOREIGN KEY (User_id) REFERENCES users (id)
 );
+
 -- Insert a user
 INSERT INTO users (username, password, credits) VALUES ('user123', 'password123', 1000);
 INSERT INTO users (username, password, credits) VALUES ('user', 'password123', 20);
@@ -56,15 +58,15 @@ INSERT INTO vraag (question_text, is_multiple_choice, quiz_id) VALUES ('Wat is d
 
 INSERT INTO antwoord (answer_text, is_juist_antwoord, vraag_id) VALUES ('Londen', 0, 1);
 INSERT INTO antwoord (answer_text, is_juist_antwoord, vraag_id) VALUES ('Berlijn', 0, 1);
-INSERT INTO antwoord (answer_text, is_juist_antwoord, vraag_id) VALUES ('Parijs', 1, 1);
 INSERT INTO antwoord (answer_text, is_juist_antwoord, vraag_id) VALUES ('Madrid', 0, 1);
+INSERT INTO antwoord (answer_text, is_juist_antwoord, vraag_id) VALUES ('Parijs', 1, 1);
 
 -- Question 2
 INSERT INTO vraag (question_text, is_multiple_choice, quiz_id) VALUES ('Welke stad is de hoofdstad van Japan?', 1, 1);
 
 INSERT INTO antwoord (answer_text, is_juist_antwoord, vraag_id) VALUES ('Peking', 0, 2);
-INSERT INTO antwoord (answer_text, is_juist_antwoord, vraag_id) VALUES ('Seoel', 0, 2);
 INSERT INTO antwoord (answer_text, is_juist_antwoord, vraag_id) VALUES ('Tokio', 1, 2);
+INSERT INTO antwoord (answer_text, is_juist_antwoord, vraag_id) VALUES ('Seoel', 0, 2);
 INSERT INTO antwoord (answer_text, is_juist_antwoord, vraag_id) VALUES ('Bangkok', 0, 2);
 
 -- Question 3
@@ -75,9 +77,9 @@ INSERT INTO antwoord (answer_text, is_juist_antwoord, vraag_id) VALUES ('Rome', 
 -- Question 4
 INSERT INTO vraag (question_text, is_multiple_choice, quiz_id) VALUES ('Wat is de hoofdstad van Australië?', 1, 1);
 
+INSERT INTO antwoord (answer_text, is_juist_antwoord, vraag_id) VALUES ('Canberra', 1, 4);
 INSERT INTO antwoord (answer_text, is_juist_antwoord, vraag_id) VALUES ('Sydney', 0, 4);
 INSERT INTO antwoord (answer_text, is_juist_antwoord, vraag_id) VALUES ('Melbourne', 0, 4);
-INSERT INTO antwoord (answer_text, is_juist_antwoord, vraag_id) VALUES ('Canberra', 1, 4);
 INSERT INTO antwoord (answer_text, is_juist_antwoord, vraag_id) VALUES ('Brisbane', 0, 4);
 
 -- Question 5
